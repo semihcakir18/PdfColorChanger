@@ -83,7 +83,6 @@ pdf_converter/
 main.py                       # Application entry point
 requirements.txt              # Project dependencies
 README.md                     # This file
-CLAUDE.md                     # Technical specifications and development notes
 ```
 
 ## Technical Details
