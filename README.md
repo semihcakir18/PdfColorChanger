@@ -230,4 +230,4 @@ This project is open source. The main dependencies have the following licenses:
 
 **Version**: 1.0.0  
 **Author**: PDF Color Converter Project  
-**Last Updated**: September 2024
+**Last Updated**: September 2025
