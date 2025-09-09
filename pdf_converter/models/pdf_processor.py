@@ -115,30 +115,27 @@ class PDFProcessor:
                             for span in line["spans"]:
                                 text = span["text"]
                                 if text.strip():
-                                    # Fix Turkish characters using proper Unicode mapping
+                                    # Smart Turkish character handling based on test results
                                     try:
-                                        # Create character mapping for Turkish characters
-                                        char_map = {
-                                            '\u00C7': 'Ç',  # Ç
-                                            '\u0131': 'ı',  # ı (dotless i)
-                                            '\u00E7': 'ç',  # ç
-                                            '\u00FC': 'ü',  # ü
-                                            '\u00DC': 'Ü',  # Ü
-                                            '\u0130': 'İ',  # İ (capital i with dot)
-                                            '\u00F6': 'ö',  # ö
-                                            '\u00D6': 'Ö',  # Ö
-                                            '\u011F': 'ğ',  # ğ
-                                            '\u011E': 'Ğ',  # Ğ
-                                            '\u015F': 'ş',  # ş
-                                            '\u015E': 'Ş',  # Ş
-                                            '\u2013': '-',  # en dash
-                                            '\u2022': '•',  # bullet point
-                                            '\u2019': "'",  # right single quotation mark
+                                        # Characters that work fine in PyMuPDF - keep as-is:
+                                        # ç (U+00E7), ü (U+00FC), Ç (U+00C7), Ü (U+00DC), ö (U+00F6), Ö (U+00D6)
+                                        
+                                        # Characters that show as flying dots - replace with ASCII:
+                                        problematic_chars = {
+                                            '\u0131': 'i',   # ı -> i (dotless i becomes regular i)
+                                            '\u0130': 'I',   # İ -> I (capital i with dot becomes regular I)
+                                            '\u011F': 'g',   # ğ -> g
+                                            '\u011E': 'G',   # Ğ -> G
+                                            '\u015F': 's',   # ş -> s
+                                            '\u015E': 'S',   # Ş -> S
+                                            '\u2013': '-',   # en dash -> hyphen
+                                            '\u2022': '•',   # bullet point (keep as-is, it works)
+                                            '\u2019': "'",   # right single quotation mark -> apostrophe
                                         }
                                         
-                                        # Apply character replacements
-                                        for unicode_char, replacement in char_map.items():
-                                            text = text.replace(unicode_char, replacement)
+                                        # Apply replacements only for problematic characters
+                                        for problematic_char, ascii_replacement in problematic_chars.items():
+                                            text = text.replace(problematic_char, ascii_replacement)
                                             
                                     except Exception as e:
                                         pass
